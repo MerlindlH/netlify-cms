@@ -138,10 +138,13 @@ function mapStateToProps(state) {
 
   if (isEditorialWorkflow) {
     returnObj.isFetching = state.editorialWorkflow.getIn(['pages', 'isFetching'], false);
+    console.log("workflow arr:");
+    console.log(state.config.get(EDITORIAL_WORKFLOW).get('states').toArray().map((elem)=>elem.toArray()));
+
 
     /*
      * Generates an ordered Map of the available status as keys.
-     * Each key containing a Sequence of available unpubhlished entries
+     * Each key containing a Sequence of available unpublished entries
      * Eg.: OrderedMap{'draft':Seq(), 'pending_review':Seq(), 'pending_publish':Seq()}
      */
     returnObj.unpublishedEntries = status.reduce((acc, currStatus) => {
