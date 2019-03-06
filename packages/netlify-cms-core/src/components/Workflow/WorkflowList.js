@@ -9,12 +9,6 @@ import { status } from 'Constants/publishModes';
 import { DragSource, DropTarget, HTML5DragDrop } from 'UI';
 import WorkflowCard from './WorkflowCard';
 
-const WorkflowListContainer = styled.div`
-  min-height: 60%;
-  display: grid;
-  grid-template-columns: 33.3% 33.3% 33.3%;
-`;
-
 const styles = {
   column: css`
     margin: 0 20px;
@@ -216,6 +210,11 @@ class WorkflowList extends React.Component {
 
   render() {
     const columns = this.renderColumns(this.props.entries);
+    const WorkflowListContainer = styled.div`
+  min-height: 60%;
+  display: grid;
+  grid-template-columns: repeat(${this.props.entries.size}, 1fr);
+`;
     return <WorkflowListContainer>{columns}</WorkflowListContainer>;
   }
 }
