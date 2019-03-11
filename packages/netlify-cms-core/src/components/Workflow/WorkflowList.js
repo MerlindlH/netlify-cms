@@ -178,6 +178,7 @@ class WorkflowList extends React.Component {
                       collectionName={collection}
                       title={entry.getIn(['data', 'title'])}
                       authorLastChange={entry.getIn(['metaData', 'user'])}
+                      listOfContributors={[1,2,3,4,5,6]}
                       body={entry.getIn(['data', 'body'])}
                       isModification={isModification}
                       editLink={editLink}
