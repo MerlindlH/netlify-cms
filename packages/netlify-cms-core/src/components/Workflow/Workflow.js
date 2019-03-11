@@ -85,8 +85,9 @@ class Workflow extends Component {
 
     if (!isEditorialWorkflow) return null;
     if (isFetching) return <Loader active>{t('workflow.workflow.loading')}</Loader>;
-    const reviewCount = unpublishedEntries.get('pending_review').size;
-    const readyCount = unpublishedEntries.get('pending_publish').size;
+    console.log(unpublishedEntries);
+    const reviewCount = unpublishedEntries.get(status.get("pending_review")).size;
+    const readyCount = unpublishedEntries.get(status.get('pending_publish')).size;
 
     return (
       <WorkflowContainer>

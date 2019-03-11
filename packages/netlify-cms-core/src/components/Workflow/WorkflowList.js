@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import styled, { css, cx } from 'react-emotion';
 import moment from 'moment';
 import { translate } from 'react-polyglot';
-import { colors, lengths } from 'netlify-cms-ui-default';
+import { colors, colorsRaw, lengths } from 'netlify-cms-ui-default';
 import { status } from 'Constants/publishModes';
 import { DragSource, DropTarget, HTML5DragDrop } from 'UI';
 import WorkflowCard from './WorkflowCard';
@@ -59,24 +59,10 @@ const ColumnHeader = styled.h2`
   margin-bottom: 28px;
 
   ${props =>
-    props.name === 'draft' &&
+    props.name &&
     css`
-      background-color: ${colors.statusDraftBackground};
-      color: ${colors.statusDraftText};
-    `}
-
-  ${props =>
-    props.name === 'pending_review' &&
-    css`
-      background-color: ${colors.statusReviewBackground};
-      color: ${colors.statusReviewText};
-    `}
-
-  ${props =>
-    props.name === 'pending_publish' &&
-    css`
-      background-color: ${colors.statusReadyBackground};
-      color: ${colors.statusReadyText};
+      background-color: ${colorsRaw[props.name.get('backgroundColor')]};
+      color: ${colorsRaw[props.name.get('textColor')]};
     `}
 `;
 
@@ -92,14 +78,16 @@ const ColumnCount = styled.p`
 const DNDNamespace = 'cms-workflow';
 
 const getColumnHeaderText = (columnName, t) => {
-  switch (columnName) {
-    case 'draft':
-      return t('workflow.workflowList.draftHeader');
-    case 'pending_review':
-      return t('workflow.workflowList.inReviewHeader');
-    case 'pending_publish':
-      return t('workflow.workflowList.readyHeader');
-  }
+  let text = columnName.get("label");
+  return text || "text missing";
+  // switch (columnName) {
+  //   case 'draft':
+  //     return t('workflow.workflowList.draftHeader'); // TODO add translation again
+  //   case 'pending_review':
+  //     return t('workflow.workflowList.inReviewHeader');
+  //   case 'pending_publish':
+  //     return t('workflow.workflowList.readyHeader');
+  // }
 };
 
 class WorkflowList extends React.Component {
