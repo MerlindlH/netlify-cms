@@ -105,7 +105,7 @@ class WorkflowCard extends React.Component{
   }
 
   render() {
-    let {
+    const {
       collectionName,
       title,
       authorLastChange,
@@ -134,7 +134,7 @@ class WorkflowCard extends React.Component{
          <DropdownItem
             key={'abc'+collection}
             label={collection}
-            onClick={() => this.setState({ assigned:collection + ` ${usertext}` })}
+            onClick={() => this.setState({ assigned: collection + ` ${usertext}` })}
           />
         ))}
       </Dropdown>
