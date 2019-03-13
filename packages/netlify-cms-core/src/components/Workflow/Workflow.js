@@ -81,6 +81,7 @@ class Workflow extends Component {
       deleteUnpublishedEntry,
       collections,
       t,
+      usertext
     } = this.props;
 
     if (!isEditorialWorkflow) return null;
@@ -126,6 +127,7 @@ class Workflow extends Component {
           handleChangeStatus={updateUnpublishedEntryStatus}
           handlePublish={publishUnpublishedEntry}
           handleDelete={deleteUnpublishedEntry}
+          usertext={usertext}
         />
       </WorkflowContainer>
     );
@@ -141,7 +143,11 @@ function mapStateToProps(state) {
     returnObj.isFetching = state.editorialWorkflow.getIn(['pages', 'isFetching'], false);
     console.log("workflow arr:");
     console.log(state.config.get(EDITORIAL_WORKFLOW).get('states').toArray().map((elem)=>elem.toArray()));
-
+    console.log(state.auth.getIn(['user','backendName']));
+    // console.log("window user");
+    // console.log(window.netlifyIdentity.currentUser()) // works in a real env
+    let user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+    returnObj.usertext = (user && user.user_metadata) || state.auth.get('user');
 
     /*
      * Generates an ordered Map of the available status as keys.

@@ -98,64 +98,88 @@ const WorkflowCardContainer = styled.div`
   }
 `;
 
-const WorkflowCard = ({
-  collectionName,
-  title,
-  authorLastChange,
-  listOfContributors,
-  body,
-  isModification,
-  editLink,
-  timestamp,
-  onDelete,
-  canPublish,
-  onPublish,
-  t,
-}) => (
-  <div><Dropdown
-    dropdownWidth="160px"
-    dropdownPosition="left"
-    dropdownTopOverlap="40px"
-    renderButton={() => (
-      <StyledDropdownButton>Assign Contributor</StyledDropdownButton>
-    )}
-  >
-    {
-      listOfContributors.map(collection => (
-      <DropdownItem
-        key={'abc'+collection}
-        label={collection}
-        onClick={() => alert(collection)}
-      />
-    ))}
-  </Dropdown>
-  <WorkflowCardContainer>
-    <WorkflowLink to={editLink}>
-      <CardCollection>{collectionName}</CardCollection>
-      <CardTitle>{title}</CardTitle>
-      <CardDate>
-        {t('workflow.workflowCard.lastChange', {
-          date: timestamp || '',
-          author: authorLastChange || '',
-        })}
-      </CardDate>
-      <CardBody>{body}</CardBody>
-    </WorkflowLink>
-    <CardButtonContainer>
-      <DeleteButton onClick={onDelete}>
-        {isModification
-          ? t('workflow.workflowCard.deleteChanges')
-          : t('workflow.workflowCard.deleteNewEntry')}
-      </DeleteButton>
-      <PublishButton disabled={!canPublish} onClick={onPublish}>
-        {isModification
-          ? t('workflow.workflowCard.publishChanges')
-          : t('workflow.workflowCard.publishNewEntry')}
-      </PublishButton>
-    </CardButtonContainer>
-  </WorkflowCardContainer></div>
-);
+const getUser = () =>{
 
+};
+
+class TextObj extends React.Component {
+  render(){
+    return <div>Assigned Person: {this.props.text || "prop missing?"}</div>;
+  }
+  //updateText(newText){
+  //  this.setState({text: newText});
+  //}
+}
+
+class WorkflowCard extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {assigned : 'nobody'};
+  }
+
+  render() {
+    let {
+      collectionName,
+      title,
+      authorLastChange,
+      listOfContributors,
+      body,
+      isModification,
+      editLink,
+      timestamp,
+      onDelete,
+      canPublish,
+      onPublish,
+      t,
+      usertext
+    } = this.props;
+    return (
+      <div><Dropdown
+       dropdownWidth="160px"
+       dropdownPosition="left"
+       dropdownTopOverlap="40px"
+        renderButton={() => (
+      <StyledDropdownButton>Assign Contributor</StyledDropdownButton>
+      )}
+      >
+        {
+          listOfContributors.map(collection => (
+         <DropdownItem
+            key={'abc'+collection}
+            label={collection}
+            onClick={() => this.setState({ assigned:collection + `${usertext}` })}
+          />
+        ))}
+      </Dropdown>
+      <TextObj text={this.state.assigned} />
+      <WorkflowCardContainer>
+        <WorkflowLink to={editLink}>
+          <CardCollection>{collectionName}</CardCollection>
+          <CardTitle>{title}</CardTitle>
+          <CardDate>
+            {t('workflow.workflowCard.lastChange', {
+              date: timestamp || '',
+              author: authorLastChange || '',
+            })}
+          </CardDate>
+          <CardBody>{body}</CardBody>
+        </WorkflowLink>
+        <CardButtonContainer>
+          <DeleteButton onClick={onDelete}>
+            {isModification
+              ? t('workflow.workflowCard.deleteChanges')
+              : t('workflow.workflowCard.deleteNewEntry')}
+          </DeleteButton>
+          <PublishButton disabled={!canPublish} onClick={onPublish}>
+            {isModification
+              ? t('workflow.workflowCard.publishChanges')
+              : t('workflow.workflowCard.publishNewEntry')}
+          </PublishButton>
+        </CardButtonContainer>
+      </WorkflowCardContainer></div>
+    );
+  }
+}
 WorkflowCard.propTypes = {
   collectionName: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,

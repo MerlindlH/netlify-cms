@@ -161,6 +161,8 @@ class WorkflowList extends React.Component {
           const slug = entry.get('slug');
           const ownStatus = entry.getIn(['metaData', 'status']);
           const collection = entry.getIn(['metaData', 'collection']);
+          console.log("entry");
+          console.log(entry.toJSON());
           const isModification = entry.get('isModification');
           const canPublish = ownStatus === status.last() && !entry.get('isPersisting', false);
           return (
@@ -186,6 +188,7 @@ class WorkflowList extends React.Component {
                       onDelete={this.requestDelete.bind(this, collection, slug, ownStatus)}
                       canPublish={canPublish}
                       onPublish={this.requestPublish.bind(this, collection, slug, ownStatus)}
+                      usertext={this.props.usertext}
                     />
                   </div>,
                 )
