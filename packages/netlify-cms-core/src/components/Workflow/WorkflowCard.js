@@ -98,19 +98,6 @@ const WorkflowCardContainer = styled.div`
   }
 `;
 
-const getUser = () =>{
-
-};
-
-class TextObj extends React.Component {
-  render(){
-    return <div>Assigned Person: {this.props.text || "prop missing?"}</div>;
-  }
-  //updateText(newText){
-  //  this.setState({text: newText});
-  //}
-}
-
 class WorkflowCard extends React.Component{
   constructor(props){
     super(props);
@@ -139,7 +126,7 @@ class WorkflowCard extends React.Component{
        dropdownPosition="left"
        dropdownTopOverlap="40px"
         renderButton={() => (
-      <StyledDropdownButton>Assign Contributor</StyledDropdownButton>
+      <StyledDropdownButton>{`Assigned: ${this.state.assigned}`}</StyledDropdownButton>
       )}
       >
         {
@@ -147,11 +134,10 @@ class WorkflowCard extends React.Component{
          <DropdownItem
             key={'abc'+collection}
             label={collection}
-            onClick={() => this.setState({ assigned:collection + `${usertext}` })}
+            onClick={() => this.setState({ assigned:collection + ` ${usertext}` })}
           />
         ))}
       </Dropdown>
-      <TextObj text={this.state.assigned} />
       <WorkflowCardContainer>
         <WorkflowLink to={editLink}>
           <CardCollection>{collectionName}</CardCollection>

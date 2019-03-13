@@ -147,7 +147,7 @@ function mapStateToProps(state) {
     // console.log("window user");
     // console.log(window.netlifyIdentity.currentUser()) // works in a real env
     let user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
-    returnObj.usertext = (user && user.user_metadata) || state.auth.get('user');
+    returnObj.usertext = (user && user.user_metadata) || state.auth.getIn(['user','backendName']);
 
     /*
      * Generates an ordered Map of the available status as keys.
