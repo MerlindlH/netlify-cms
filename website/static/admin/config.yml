@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: netlify/netlify-cms
+  repo: merlindlh/netlify-cms
   squash_merges: true
 
 site_url: "https://www.netlifycms.org"
