@@ -1,8 +1,9 @@
 backend:
-  name: git-gateway
-  branch: feature/extendingEditorialWorkflowStateTest
+  name: github
+  repo: merlindlh/netlify-cms
+  branch: master #feature/extendingEditorialWorkflowStateTest
 
-site_url: https://example.com
+site_url: https://admiring-kowalevski-21767e.netlify.com
 
 publish_mode: editorial_workflow
 editorial_workflow:
