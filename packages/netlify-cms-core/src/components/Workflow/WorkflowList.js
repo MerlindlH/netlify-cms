@@ -5,7 +5,7 @@ import styled, { css, cx } from 'react-emotion';
 import moment from 'moment';
 import { translate } from 'react-polyglot';
 import { colors, colorsRaw, lengths } from 'netlify-cms-ui-default';
-import { status } from 'Constants/publishModes';
+import { status, statusObjects } from 'Constants/publishModes';
 import { DragSource, DropTarget, HTML5DragDrop } from 'UI';
 import WorkflowCard from './WorkflowCard';
 
@@ -61,8 +61,8 @@ const ColumnHeader = styled.h2`
   ${props =>
     props.name &&
     css`
-      background-color: ${colorsRaw[props.name.get('backgroundColor')]};
-      color: ${colorsRaw[props.name.get('textColor')]};
+      background-color: ${colorsRaw[statusObjects.get(props.name).get('backgroundColor')]};
+      color: ${colorsRaw[statusObjects.get(props.name).get('textColor')]};
     `}
 `;
 
@@ -78,7 +78,7 @@ const ColumnCount = styled.p`
 const DNDNamespace = 'cms-workflow';
 
 const getColumnHeaderText = (columnName, t) => {
-  let text = columnName.get("label");
+  let text = statusObjects.get(columnName).get("label");
   return text || "text missing";
   // switch (columnName) {
   //   case 'draft':
@@ -93,10 +93,15 @@ const getColumnHeaderText = (columnName, t) => {
 class WorkflowList extends React.Component {
   static propTypes = {
     entries: ImmutablePropTypes.orderedMap,
+    handleChangeAssignee: PropTypes.func.isRequired,
     handleChangeStatus: PropTypes.func.isRequired,
     handlePublish: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+  };
+
+  handleChangeAssignee = (collection, slug, oldAssignee, newAssignee) => {
+    this.props.handleChangeAssignee(collection, slug, oldAssignee, newAssignee);
   };
 
   handleChangeStatus = (newStatus, dragProps) => {
@@ -122,7 +127,8 @@ class WorkflowList extends React.Component {
     this.props.handlePublish(collection, slug);
   };
 
-  renderColumns = (entries, column) => {
+  renderColumns = (props, column) => {
+    const {entries, currentUserText} = props;
     if (!entries) return null;
 
     if (!column) {
@@ -143,7 +149,7 @@ class WorkflowList extends React.Component {
                     smart_count: currEntries.size,
                   })}
                 </ColumnCount>
-                {this.renderColumns(currEntries, currColumn)}
+                {this.renderColumns({entries: currEntries, currentUserText}, currColumn)}
               </div>,
             )
           }
@@ -159,6 +165,7 @@ class WorkflowList extends React.Component {
             'collection',
           ])}/entries/${entry.get('slug')}`;
           const slug = entry.get('slug');
+          const ownAssignee = entry.getIn(['metaData', 'assignee']);
           const ownStatus = entry.getIn(['metaData', 'status']);
           const collection = entry.getIn(['metaData', 'collection']);
           console.log("entry");
@@ -188,7 +195,9 @@ class WorkflowList extends React.Component {
                       onDelete={this.requestDelete.bind(this, collection, slug, ownStatus)}
                       canPublish={canPublish}
                       onPublish={this.requestPublish.bind(this, collection, slug, ownStatus)}
-                      usertext={this.props.usertext}
+                      onAssigneeChange={this.handleChangeAssignee.bind(this, collection, slug)}
+                      assigneeText={ownAssignee}
+                      currentUserText={currentUserText}
                     />
                   </div>,
                 )
@@ -201,7 +210,7 @@ class WorkflowList extends React.Component {
   };
 
   render() {
-    const columns = this.renderColumns(this.props.entries);
+    const columns = this.renderColumns(this.props);
     const WorkflowListContainer = styled.div`
   min-height: 60%;
   display: grid;

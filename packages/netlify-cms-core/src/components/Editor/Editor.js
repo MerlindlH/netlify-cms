@@ -72,7 +72,7 @@ class Editor extends React.Component {
     loadEntries: PropTypes.func.isRequired,
     deployPreview: ImmutablePropTypes.map,
     loadDeployPreview: PropTypes.func.isRequired,
-    currentStatus: ImmutablePropTypes.map,
+    currentStatus: PropTypes.string,
     user: ImmutablePropTypes.map.isRequired,
     location: PropTypes.shape({
       pathname: PropTypes.string,

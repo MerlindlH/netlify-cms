@@ -162,6 +162,7 @@ export default class TestRepo {
           },
           metaData: {
             collection: options.collectionName,
+            assignee: this.options.initialWorkflowAssignee,
             status: this.options.initialWorkflowStatus,
             title: options.parsedData && options.parsedData.title,
             description: options.parsedData && options.parsedData.description,
@@ -183,6 +184,15 @@ export default class TestRepo {
     } else {
       window.repoFiles[folder][fileName].content = raw;
     }
+    return Promise.resolve();
+  }
+
+  updateUnpublishedEntryAssignee(collection, slug, newAssignee) {
+    const unpubStore = window.repoFilesUnpublished;
+    const entryIndex = unpubStore.findIndex(
+      e => e.metaData.collection === collection && e.slug === slug,
+    );
+    unpubStore[entryIndex].metaData.assignee = newAssignee;
     return Promise.resolve();
   }
 

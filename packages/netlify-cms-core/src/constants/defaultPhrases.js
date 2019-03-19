@@ -135,6 +135,7 @@ export function getPhrases() {
         onFailToLoadDeployPreview: 'Failed to load preview: %{details}',
         onFailToPersist: 'Failed to persist entry: %{details}',
         onFailToDelete: 'Failed to delete entry: %{details}',
+        onFailToUpdateAssignee: 'Failed to update assignee: %{details}',
         onFailToUpdateStatus: 'Failed to update status: %{details}',
         missingRequiredField:
           "Oops, you've missed a required field. Please complete before saving.",

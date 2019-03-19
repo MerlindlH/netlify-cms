@@ -8,6 +8,9 @@ import {
   UNPUBLISHED_ENTRIES_SUCCESS,
   UNPUBLISHED_ENTRY_PERSIST_REQUEST,
   UNPUBLISHED_ENTRY_PERSIST_SUCCESS,
+  UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_REQUEST,
+  UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_SUCCESS,
+  UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_FAILURE,
   UNPUBLISHED_ENTRY_STATUS_CHANGE_REQUEST,
   UNPUBLISHED_ENTRY_STATUS_CHANGE_SUCCESS,
   UNPUBLISHED_ENTRY_STATUS_CHANGE_FAILURE,
@@ -89,6 +92,26 @@ const unpublishedEntries = (state = Map(), action) => {
         'isPersisting',
       ]);
 
+    case UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_REQUEST:
+      // Update Optimistically
+      return state.withMutations(map => {
+        map.setIn(
+          ['entities', `${action.payload.collection}.${action.payload.slug}`, 'metaData', 'assignee'],
+          action.payload.newAssignee,
+        );
+        map.setIn(
+          ['entities', `${action.payload.collection}.${action.payload.slug}`, 'isUpdatingAssignee'],
+          true,
+        );
+      });
+
+    case UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_SUCCESS:
+    case UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_FAILURE:
+      return state.setIn(
+        ['entities', `${action.payload.collection}.${action.payload.slug}`, 'isUpdatingAssignee'],
+        false,
+      );
+
     case UNPUBLISHED_ENTRY_STATUS_CHANGE_REQUEST:
       // Update Optimistically
       return state.withMutations(map => {
@@ -132,6 +155,7 @@ const unpublishedEntries = (state = Map(), action) => {
 export const selectUnpublishedEntry = (state, collection, slug) =>
   state && state.getIn(['entities', `${collection}.${slug}`]);
 
+// TODO: think of adding a ...byAssignee to make filtering for your own issues possible
 export const selectUnpublishedEntriesByStatus = (state, status) => {
   if (!state) return null;
   return state

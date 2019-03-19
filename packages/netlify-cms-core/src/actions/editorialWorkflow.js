@@ -27,6 +27,10 @@ export const UNPUBLISHED_ENTRY_PERSIST_REQUEST = 'UNPUBLISHED_ENTRY_PERSIST_REQU
 export const UNPUBLISHED_ENTRY_PERSIST_SUCCESS = 'UNPUBLISHED_ENTRY_PERSIST_SUCCESS';
 export const UNPUBLISHED_ENTRY_PERSIST_FAILURE = 'UNPUBLISHED_ENTRY_PERSIST_FAILURE';
 
+export const UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_REQUEST = 'UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_REQUEST';
+export const UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_SUCCESS = 'UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_SUCCESS';
+export const UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_FAILURE = 'UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_FAILURE';
+
 export const UNPUBLISHED_ENTRY_STATUS_CHANGE_REQUEST = 'UNPUBLISHED_ENTRY_STATUS_CHANGE_REQUEST';
 export const UNPUBLISHED_ENTRY_STATUS_CHANGE_SUCCESS = 'UNPUBLISHED_ENTRY_STATUS_CHANGE_SUCCESS';
 export const UNPUBLISHED_ENTRY_STATUS_CHANGE_FAILURE = 'UNPUBLISHED_ENTRY_STATUS_CHANGE_FAILURE';
@@ -129,6 +133,25 @@ function unpublishedEntryPersistedFail(error, transactionID) {
   };
 }
 
+function unpublishedEntryAssigneeChangeRequest(
+  collection,
+  slug,
+  oldAssignee,
+  newAssignee,
+  transactionID,
+) {
+  return {
+    type: UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_REQUEST,
+    payload: {
+      collection,
+      slug,
+      oldAssignee,
+      newAssignee,
+    },
+    optimist: { type: BEGIN, id: transactionID },
+  };
+}
+
 function unpublishedEntryStatusChangeRequest(
   collection,
   slug,
@@ -148,6 +171,25 @@ function unpublishedEntryStatusChangeRequest(
   };
 }
 
+function unpublishedEntryAssigneeChangePersisted(
+  collection,
+  slug,
+  oldAssignee,
+  newAssignee,
+  transactionID,
+) {
+  return {
+    type: UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_SUCCESS,
+    payload: {
+      collection,
+      slug,
+      oldAssignee,
+      newAssignee,
+    },
+    optimist: { type: COMMIT, id: transactionID },
+  };
+}
+
 function unpublishedEntryStatusChangePersisted(
   collection,
   slug,
@@ -164,6 +206,14 @@ function unpublishedEntryStatusChangePersisted(
       newStatus,
     },
     optimist: { type: COMMIT, id: transactionID },
+  };
+}
+
+function unpublishedEntryAssigneeChangeError(collection, slug, transactionID) {
+  return {
+    type: UNPUBLISHED_ENTRY_ASSIGNEE_CHANGE_FAILURE,
+    payload: { collection, slug },
+    optimist: { type: REVERT, id: transactionID },
   };
 }
 
@@ -362,6 +412,56 @@ export function persistUnpublishedEntry(collection, existingUnpublishedEntry) {
       return Promise.reject(dispatch(unpublishedEntryPersistedFail(error, transactionID)));
     }
   };
+}
+
+export function updateUnpublishedEntryAssignee(collection, slug, oldAssignee, newAssignee) {
+  return (dispatch, getState) => {
+    const state = getState();
+    console.log('inside dispatch');
+    console.log(oldAssignee, " ->", newAssignee);
+
+    const backend = currentBackend(state.config);
+    const transactionID = uuid();
+    dispatch(
+      unpublishedEntryAssigneeChangeRequest(collection, slug, oldAssignee, newAssignee, transactionID),
+    );
+    //TODO implement other backends than test
+    backend
+      .updateUnpublishedEntryAssignee(collection, slug, newAssignee)
+      .then(() => {
+        dispatch(
+          notifSend({
+            message: {
+              key: 'ui.toast.entryUpdated',
+            },
+            kind: 'success',
+            dismissAfter: 4000,
+          }),
+        );
+        dispatch(
+          unpublishedEntryAssigneeChangePersisted(
+            collection,
+            slug,
+            oldAssignee,
+            newAssignee,
+            transactionID,
+          ),
+        );
+      })
+      .catch(error => {
+        dispatch(
+          notifSend({
+            message: {
+              key: 'ui.toast.onFailToUpdateAssignee',
+              details: error,
+            },
+            kind: 'danger',
+            dismissAfter: 8000,
+          }),
+        );
+        dispatch(unpublishedEntryAssigneeChangeError(collection, slug, transactionID));
+      });
+  }
 }
 
 export function updateUnpublishedEntryStatus(collection, slug, oldStatus, newStatus) {

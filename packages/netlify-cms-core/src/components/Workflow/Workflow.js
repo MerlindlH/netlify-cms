@@ -18,6 +18,7 @@ import { createNewEntry } from 'Actions/collections';
 import {
   loadUnpublishedEntries,
   updateUnpublishedEntryStatus,
+  updateUnpublishedEntryAssignee,
   publishUnpublishedEntry,
   deleteUnpublishedEntry,
 } from 'Actions/editorialWorkflow';
@@ -58,6 +59,7 @@ class Workflow extends Component {
     isFetching: PropTypes.bool,
     unpublishedEntries: ImmutablePropTypes.map,
     loadUnpublishedEntries: PropTypes.func.isRequired,
+    updateUnpublishedEntryAssignee: PropTypes.func.isRequired,
     updateUnpublishedEntryStatus: PropTypes.func.isRequired,
     publishUnpublishedEntry: PropTypes.func.isRequired,
     deleteUnpublishedEntry: PropTypes.func.isRequired,
@@ -76,19 +78,21 @@ class Workflow extends Component {
       isEditorialWorkflow,
       isFetching,
       unpublishedEntries,
+      updateUnpublishedEntryAssignee,
       updateUnpublishedEntryStatus,
       publishUnpublishedEntry,
       deleteUnpublishedEntry,
       collections,
       t,
-      usertext
+      currentUserText
     } = this.props;
 
     if (!isEditorialWorkflow) return null;
     if (isFetching) return <Loader active>{t('workflow.workflow.loading')}</Loader>;
     console.log(unpublishedEntries);
-    const reviewCount = unpublishedEntries.get(status.get("pending_review")).size;
-    const readyCount = unpublishedEntries.get(status.get('pending_publish')).size;
+    //TODO: change this texts to be generic...
+    const reviewCount = unpublishedEntries.get("pending_review").size;
+    const readyCount = unpublishedEntries.get('pending_publish').size;
 
     return (
       <WorkflowContainer>
@@ -124,10 +128,11 @@ class Workflow extends Component {
         </WorkflowTop>
         <WorkflowList
           entries={unpublishedEntries}
+          handleChangeAssignee={updateUnpublishedEntryAssignee}
           handleChangeStatus={updateUnpublishedEntryStatus}
           handlePublish={publishUnpublishedEntry}
           handleDelete={deleteUnpublishedEntry}
-          usertext={usertext}
+          currentUserText={currentUserText}
         />
       </WorkflowContainer>
     );
@@ -147,7 +152,8 @@ function mapStateToProps(state) {
     // console.log("window user");
     // console.log(window.netlifyIdentity.currentUser()) // works in a real env
     let user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
-    returnObj.usertext = (user && user.user_metadata) || state.auth.getIn(['user','backendName']);
+    returnObj.currentUserText = (user && user.user_metadata.full_name) || state.auth.getIn(['user','backendName']);
+    console.log(returnObj.currentUserText);
 
     /*
      * Generates an ordered Map of the available status as keys.
@@ -167,6 +173,7 @@ export default connect(
   {
     loadUnpublishedEntries,
     updateUnpublishedEntryStatus,
+    updateUnpublishedEntryAssignee,
     publishUnpublishedEntry,
     deleteUnpublishedEntry,
   },

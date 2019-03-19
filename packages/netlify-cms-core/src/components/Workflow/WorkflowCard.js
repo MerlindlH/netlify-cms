@@ -99,11 +99,6 @@ const WorkflowCardContainer = styled.div`
 `;
 
 class WorkflowCard extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {assigned : 'nobody'};
-  }
-
   render() {
     const {
       collectionName,
@@ -117,8 +112,10 @@ class WorkflowCard extends React.Component{
       onDelete,
       canPublish,
       onPublish,
+      assigneeText,
+      onAssigneeChange,
       t,
-      usertext
+      currentUserText
     } = this.props;
     return (
       <div><Dropdown
@@ -126,7 +123,7 @@ class WorkflowCard extends React.Component{
        dropdownPosition="left"
        dropdownTopOverlap="40px"
         renderButton={() => (
-      <StyledDropdownButton>{`Assigned: ${this.state.assigned}`}</StyledDropdownButton>
+      <StyledDropdownButton>{`Assigned: ${assigneeText}`}</StyledDropdownButton>
       )}
       >
         {
@@ -134,7 +131,12 @@ class WorkflowCard extends React.Component{
          <DropdownItem
             key={'abc'+collection}
             label={collection}
-            onClick={() => this.setState({ assigned: collection + ` ${usertext}` })}
+            onClick={() => {
+              const oldAssignee = assigneeText;
+              const newAssignee = collection + ` ${currentUserText}`;
+              //this.setState({ assigned: newAssignee }); // will be removed finally
+              onAssigneeChange(oldAssignee, newAssignee);
+            }}
           />
         ))}
       </Dropdown>
@@ -178,6 +180,7 @@ WorkflowCard.propTypes = {
   canPublish: PropTypes.bool.isRequired,
   onPublish: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
+  currentUserText: PropTypes.string
 };
 
 export default translate()(WorkflowCard);

@@ -262,6 +262,7 @@ class Backend {
       useWorkflow: config.getIn(['publish_mode']) === EDITORIAL_WORKFLOW,
       updateUserCredentials: this.updateUserCredentials,
       initialWorkflowStatus: status.first(),
+      initialWorkflowAssignee: 'nobody',
     });
     this.backendName = backendName;
     this.authStore = authStore;
@@ -698,6 +699,10 @@ class Backend {
 
   persistUnpublishedEntry(...args) {
     return this.persistEntry(...args, { unpublished: true });
+  }
+
+  updateUnpublishedEntryAssignee(collection, slug, newAssignee) {
+    return this.implementation.updateUnpublishedEntryAssignee(collection, slug, newAssignee);
   }
 
   updateUnpublishedEntryStatus(collection, slug, newStatus) {

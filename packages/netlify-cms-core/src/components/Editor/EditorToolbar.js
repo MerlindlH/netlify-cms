@@ -16,7 +16,7 @@ import {
   buttons,
   lengths,
 } from 'netlify-cms-ui-default';
-import { status } from 'Constants/publishModes';
+import { status, statusObjects } from 'Constants/publishModes';
 import SettingsDropdown from 'UI/SettingsDropdown';
 
 const styles = {
@@ -220,7 +220,7 @@ class EditorToolbar extends React.Component {
     hasUnpublishedChanges: PropTypes.bool,
     isNewEntry: PropTypes.bool,
     isModification: PropTypes.bool,
-    currentStatus: ImmutablePropTypes.map,
+    currentStatus: PropTypes.string,
     onLogoutClick: PropTypes.func.isRequired,
     deployPreview: ImmutablePropTypes.map,
     loadDeployPreview: PropTypes.func.isRequired,
@@ -396,7 +396,7 @@ class EditorToolbar extends React.Component {
             )}
           >
             {status.toArray().map((elem) => (
-                <StatusDropdownItem label={elem.get('label')} onClick={() => onChangeStatus(elem)} icon={currentStatus === elem && 'check'}/>
+                <StatusDropdownItem label={statusObjects.get(elem).get('label')} onClick={() => onChangeStatus(elem)} icon={currentStatus === elem && 'check'}/>
               ))}
           </ToolbarDropdown>
           <ToolbarDropdown
