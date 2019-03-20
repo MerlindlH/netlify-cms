@@ -10,10 +10,10 @@ publish_mode: editorial_workflow
 editorial_workflow:
   states:
     - { label: "Draft",  name: "draft", color: 'purple' }
-    - { label: "In Review",  name: "review", color: 'blue' }
+    - { label: "In Review",  name: "pending_review", color: 'blue' }
     - { label: "Copy Edit",  name: "copyedit", color: 'teal' }
     - { label: "Blocked",  name: "blocked", color: 'red' }
-    - { label: "Ready",  name: "ready", color: 'green' }
+    - { label: "Ready",  name: "pending_publish", color: 'green' }
 
 
 media_folder: assets/uploads

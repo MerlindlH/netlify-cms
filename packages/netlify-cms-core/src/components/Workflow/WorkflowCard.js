@@ -129,11 +129,11 @@ class WorkflowCard extends React.Component{
         {
           listOfContributors.map(collection => (
          <DropdownItem
-            key={'abc'+collection}
-            label={collection}
+            key={`${collection}`}
+            label={`${collection}`}
             onClick={() => {
               const oldAssignee = assigneeText;
-              const newAssignee = collection + ` ${currentUserText}`;
+              const newAssignee = `${collection} ${currentUserText}`;
               //this.setState({ assigned: newAssignee }); // will be removed finally
               onAssigneeChange(oldAssignee, newAssignee);
             }}

@@ -184,6 +184,7 @@ class WorkflowList extends React.Component {
                 connect(
                   <div>
                     <WorkflowCard
+                      key={`${collection}-${slug}`}
                       collectionName={collection}
                       title={entry.getIn(['data', 'title'])}
                       authorLastChange={entry.getIn(['metaData', 'user'])}

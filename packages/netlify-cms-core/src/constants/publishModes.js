@@ -19,35 +19,41 @@ const fallbackStatusObjects = OrderedMap({
   'pending_publish': Map({ label:'Ready', textColor:'green', backgroundColor:'greenLight', description:'Waiting to go live' }),
 });
 
-//TODO: import data from config.yml e.g. over redux
-const importedStates = (() => [{ label: "Draft", name: "draft", color: 'purple', order: 1 },
-  { label: "In Review", name: "pending_review", color: 'blue', order: 1 },
-  { label: "Copy Edit", name: "copyedit", color: 'teal', order: 1 },
-  { label: "Blocked", name: "blocked", color: 'red',  order: 1 },
-  { label: "Ready", name: "pending_publish", color: 'green',  order: 1 }])();
+// data gets parsed from config.yml and loaded with setImportedState (if there is data provided)
+let importedStates = [];
 
-const statusList = (() => {
-  //later on data gathered from config.yml / store object
-  //console.log(store.getState().config.get(EDITORIAL_WORKFLOW).toJSON()); // comment to see how it works normally
+function createStateList() {
   return OrderedSet(importedStates.map((elem) => elem.name));
-})();
+}
 
-export const status = (() => {
+function createStateObjects() {
+  return OrderedMap(importedStates.reduce((accu, elem) => {
+    accu[elem.name] = Map({
+      label: `${elem.label}`,
+      textColor: `${elem.color}`, backgroundColor: `${elem.color}` + 'Light', description: `To be finished`,
+    });
+    return accu;
+  }, {}));
+}
+
+export let status = (() => {
   if(importedStates.length) {
-    return statusList;
+    return createStateList();
   }
   return fallbackStatusList;
 })();
 
-export const statusObjects = (() => {
+export let statusObjects = (() => {
   if(importedStates.length) {
-    return OrderedMap(importedStates.reduce((accu, elem) => {
-      accu[elem.name] = Map({
-        label: `${elem.label}`,
-        textColor: `${elem.color}`, backgroundColor: `${elem.color}` + 'Light', description: `To be finished`
-      });
-      return accu;
-    }, {}));
+    return createStateObjects();
   }
   return fallbackStatusObjects;
 })();
+
+export const setImportedState = (newState) => {
+  if (importedStates.length) return;
+
+  importedStates = newState.map((entry) => entry.toJSON()).toArray();
+  status = createStateList();
+  statusObjects = createStateObjects();
+};

@@ -148,6 +148,10 @@ export function loadConfig() {
 
       const config = applyDefaults(mergedConfig);
 
+      if(config.get("publish_mode") === publishModes.EDITORIAL_WORKFLOW && config.get(publishModes.EDITORIAL_WORKFLOW)) {
+        publishModes.setImportedState(config.get(publishModes.EDITORIAL_WORKFLOW).get('states'));
+      }
+
       dispatch(configDidLoad(config));
       dispatch(authenticateUser());
     } catch (err) {
