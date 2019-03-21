@@ -79,7 +79,7 @@ const DNDNamespace = 'cms-workflow';
 
 const getColumnHeaderText = (columnName, t) => {
   let text = statusObjects.get(columnName).get("label");
-  return text || "text missing";
+  return text || t("text missing");
   // switch (columnName) {
   //   case 'draft':
   //     return t('workflow.workflowList.draftHeader'); // TODO add translation again
@@ -98,6 +98,7 @@ class WorkflowList extends React.Component {
     handlePublish: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    currentUserText: PropTypes.string,
   };
 
   handleChangeAssignee = (collection, slug, oldAssignee, newAssignee) => {
@@ -168,8 +169,6 @@ class WorkflowList extends React.Component {
           const ownAssignee = entry.getIn(['metaData', 'assignee']);
           const ownStatus = entry.getIn(['metaData', 'status']);
           const collection = entry.getIn(['metaData', 'collection']);
-          console.log("entry");
-          console.log(entry.toJSON());
           const isModification = entry.get('isModification');
           const canPublish = ownStatus === status.last() && !entry.get('isPersisting', false);
           return (
@@ -188,6 +187,7 @@ class WorkflowList extends React.Component {
                       collectionName={collection}
                       title={entry.getIn(['data', 'title'])}
                       authorLastChange={entry.getIn(['metaData', 'user'])}
+                      //TODO provide real users to choose from (e.g. for admin view / remove)
                       listOfContributors={[1,2,3,4,5,6]}
                       body={entry.getIn(['data', 'body'])}
                       isModification={isModification}

@@ -4,13 +4,6 @@ import { Map, OrderedMap, OrderedSet } from 'immutable';
 export const SIMPLE = 'simple';
 export const EDITORIAL_WORKFLOW = 'editorial_workflow';
 
-// Available status
-export const statusOld = OrderedMap({
-  DRAFT: 'draft',
-  PENDING_REVIEW: 'pending_review',
-  PENDING_PUBLISH: 'pending_publish',
-});
-
 const fallbackStatusList = OrderedSet(['draft', 'pending_review', 'pending_publish']);
 
 const fallbackStatusObjects = OrderedMap({
@@ -26,11 +19,14 @@ function createStateList() {
   return OrderedSet(importedStates.map((elem) => elem.name));
 }
 
+//TODO provide descriptions if needed
 function createStateObjects() {
   return OrderedMap(importedStates.reduce((accu, elem) => {
     accu[elem.name] = Map({
       label: `${elem.label}`,
-      textColor: `${elem.color}`, backgroundColor: `${elem.color}` + 'Light', description: `To be finished`,
+      textColor: `${elem.color}`,
+      backgroundColor: `${elem.color}` + 'Light',
+      description: `To be finished`,
     });
     return accu;
   }, {}));

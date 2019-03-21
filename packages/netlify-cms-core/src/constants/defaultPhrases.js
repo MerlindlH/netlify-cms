@@ -142,7 +142,7 @@ export function getPhrases() {
         entrySaved: 'Entry saved',
         entryPublished: 'Entry published',
         onFailToPublishEntry: 'Failed to publish: %{details}',
-        entryUpdated: 'Entry status updated',
+        entryUpdated: 'Entry updated',
         onDeleteUnpublishedChanges: 'Unpublished changes deleted',
         onFailToAuth: '%{details}',
       },

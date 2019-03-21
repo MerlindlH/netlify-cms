@@ -17,8 +17,8 @@ import {
 import { createNewEntry } from 'Actions/collections';
 import {
   loadUnpublishedEntries,
-  updateUnpublishedEntryStatus,
   updateUnpublishedEntryAssignee,
+  updateUnpublishedEntryStatus,
   publishUnpublishedEntry,
   deleteUnpublishedEntry,
 } from 'Actions/editorialWorkflow';
@@ -64,6 +64,7 @@ class Workflow extends Component {
     publishUnpublishedEntry: PropTypes.func.isRequired,
     deleteUnpublishedEntry: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    currentUserText: PropTypes.string.isRequired,
   };
 
   componentDidMount() {
@@ -89,7 +90,6 @@ class Workflow extends Component {
 
     if (!isEditorialWorkflow) return null;
     if (isFetching) return <Loader active>{t('workflow.workflow.loading')}</Loader>;
-    console.log(unpublishedEntries);
     //TODO: change this texts to be generic...
     const reviewCount = unpublishedEntries.get("pending_review").size;
     const readyCount = unpublishedEntries.get('pending_publish').size;
@@ -146,14 +146,9 @@ function mapStateToProps(state) {
 
   if (isEditorialWorkflow) {
     returnObj.isFetching = state.editorialWorkflow.getIn(['pages', 'isFetching'], false);
-    console.log("workflow arr:");
-    console.log(state.config.get(EDITORIAL_WORKFLOW).get('states').toArray().map((elem)=>elem.toArray()));
-    console.log(state.auth.getIn(['user','backendName']));
-    // console.log("window user");
-    // console.log(window.netlifyIdentity.currentUser()) // works in a real env
     let user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+    //TODO maybe replace the fallback string
     returnObj.currentUserText = (user && user.user_metadata.full_name) || state.auth.getIn(['user','backendName']);
-    console.log(returnObj.currentUserText);
 
     /*
      * Generates an ordered Map of the available status as keys.
@@ -172,8 +167,8 @@ export default connect(
   mapStateToProps,
   {
     loadUnpublishedEntries,
-    updateUnpublishedEntryStatus,
     updateUnpublishedEntryAssignee,
+    updateUnpublishedEntryStatus,
     publishUnpublishedEntry,
     deleteUnpublishedEntry,
   },

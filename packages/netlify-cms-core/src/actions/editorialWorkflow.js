@@ -416,16 +416,14 @@ export function persistUnpublishedEntry(collection, existingUnpublishedEntry) {
 
 export function updateUnpublishedEntryAssignee(collection, slug, oldAssignee, newAssignee) {
   return (dispatch, getState) => {
+    if (oldAssignee === newAssignee) return;
     const state = getState();
-    console.log('inside dispatch');
-    console.log(oldAssignee, " ->", newAssignee);
 
     const backend = currentBackend(state.config);
     const transactionID = uuid();
     dispatch(
       unpublishedEntryAssigneeChangeRequest(collection, slug, oldAssignee, newAssignee, transactionID),
     );
-    //TODO implement other backends than test
     backend
       .updateUnpublishedEntryAssignee(collection, slug, newAssignee)
       .then(() => {

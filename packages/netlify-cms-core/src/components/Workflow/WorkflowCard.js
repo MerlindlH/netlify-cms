@@ -134,7 +134,6 @@ class WorkflowCard extends React.Component{
             onClick={() => {
               const oldAssignee = assigneeText;
               const newAssignee = `${collection} ${currentUserText}`;
-              //this.setState({ assigned: newAssignee }); // will be removed finally
               onAssigneeChange(oldAssignee, newAssignee);
             }}
           />
@@ -180,7 +179,9 @@ WorkflowCard.propTypes = {
   canPublish: PropTypes.bool.isRequired,
   onPublish: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  currentUserText: PropTypes.string
+  currentUserText: PropTypes.string.isRequired,
+  assigneeText: PropTypes.string.isRequired,
+  onAssigneeChange: PropTypes.func.isRequired,
 };
 
 export default translate()(WorkflowCard);
