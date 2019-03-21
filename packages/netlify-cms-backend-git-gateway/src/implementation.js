@@ -153,6 +153,7 @@ export default class GitGateway {
         tokenPromise: this.tokenPromise,
         commitAuthor: pick(userData, ['name', 'email']),
         squash_merges: this.squash_merges,
+        initialWorkflowAssignee: this.options.initialWorkflowAssignee,
         initialWorkflowStatus: this.options.initialWorkflowStatus,
       };
 
@@ -353,6 +354,9 @@ export default class GitGateway {
   }
   unpublishedEntry(collection, slug) {
     return this.backend.unpublishedEntry(collection, slug);
+  }
+  updateUnpublishedEntryAssignee(collection, slug, newAssignee) {
+    return this.backend.updateUnpublishedEntryAssignee(collection, slug, newAssignee);
   }
   updateUnpublishedEntryStatus(collection, slug, newStatus) {
     return this.backend.updateUnpublishedEntryStatus(collection, slug, newStatus);

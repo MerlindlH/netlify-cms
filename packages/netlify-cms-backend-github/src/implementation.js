@@ -72,6 +72,7 @@ export default class GitHub {
       repo: this.repo,
       api_root: this.api_root,
       squash_merges: this.squash_merges,
+      initialWorkflowAssignee: this.options.initialWorkflowAssignee,
       initialWorkflowStatus: this.options.initialWorkflowStatus,
     });
     const user = await this.api.user();
@@ -270,6 +271,10 @@ export default class GitHub {
       const { target_url, state } = deployStatus;
       return { url: target_url, status: state };
     }
+  }
+
+  updateUnpublishedEntryAssignee(collection, slug, newAssignee) {
+    return this.api.updateUnpublishedEntryAssignee(collection, slug, newAssignee);
   }
 
   updateUnpublishedEntryStatus(collection, slug, newStatus) {

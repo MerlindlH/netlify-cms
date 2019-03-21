@@ -261,8 +261,8 @@ class Backend {
     this.implementation = implementation.init(config, {
       useWorkflow: config.getIn(['publish_mode']) === EDITORIAL_WORKFLOW,
       updateUserCredentials: this.updateUserCredentials,
-      initialWorkflowStatus: status.first(),
       initialWorkflowAssignee: 'nobody',
+      initialWorkflowStatus: status.first(),
     });
     this.backendName = backendName;
     this.authStore = authStore;

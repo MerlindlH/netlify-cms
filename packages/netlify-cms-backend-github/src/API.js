@@ -14,6 +14,7 @@ export default class API {
     this.repo = config.repo || '';
     this.repoURL = `/repos/${this.repo}`;
     this.merge_method = config.squash_merges ? 'squash' : 'merge';
+    this.initialWorkflowAssignee = config.initialWorkflowAssignee;
     this.initialWorkflowStatus = config.initialWorkflowStatus;
   }
 
@@ -393,6 +394,7 @@ export default class API {
               head: prResponse.head && prResponse.head.sha,
             },
             user: user.name || user.login,
+            assignee: this.initialWorkflowAssignee,
             status: this.initialWorkflowStatus,
             branch: branchName,
             collection: options.collectionName,
@@ -590,6 +592,16 @@ export default class API {
     }
 
     throw Error('Editorial workflow branch changed unexpectedly.');
+  }
+
+  updateUnpublishedEntryAssignee(collection, slug, assignee) {
+    const contentKey = slug;
+    return this.retrieveMetadata(contentKey)
+      .then(metadata => ({
+        ...metadata,
+        assignee,
+      }))
+      .then(updatedMetadata => this.storeMetadata(contentKey, updatedMetadata));
   }
 
   updateUnpublishedEntryStatus(collection, slug, status) {

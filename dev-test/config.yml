@@ -1,8 +1,8 @@
 backend:
-  name: test-repo
-  #name: git-gateway
-  #repo: merlindlh/netlify-cms
-  #branch: feature/extendingEditorialWorkflowStateTest
+  #name: test-repo
+  name: git-gateway
+  repo: merlindlh/netlify-cms
+  branch: extendingEditorialWorkflow
 
 site_url: https://admiring-kowalevski-21767e.netlify.com
 
@@ -16,7 +16,7 @@ editorial_workflow:
     - { label: "Ready",  name: "pending_publish", color: 'green' }
 
 
-media_folder: assets/uploads
+media_folder: img
 
 collections: # A list of collections the CMS should be able to edit
   - name: 'posts' # Used in routes, ie.: /admin/collections/:slug/edit
