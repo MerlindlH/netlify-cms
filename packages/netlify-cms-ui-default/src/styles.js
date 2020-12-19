@@ -52,7 +52,7 @@ const colorsRaw = {
 const colors = {
   statusDraftText: colorsRaw.purple,
   statusDraftBackground: colorsRaw.purpleLight,
-  statusReviewText: colorsRaw.Brown,
+  statusReviewText: colorsRaw.brown,
   statusReviewBackground: colorsRaw.yellow,
   statusReadyText: colorsRaw.green,
   statusReadyBackground: colorsRaw.greenLight,

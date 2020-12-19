@@ -85,8 +85,9 @@ class Workflow extends Component {
 
     if (!isEditorialWorkflow) return null;
     if (isFetching) return <Loader active>{t('workflow.workflow.loading')}</Loader>;
-    const reviewCount = unpublishedEntries.get('pending_review').size;
-    const readyCount = unpublishedEntries.get('pending_publish').size;
+    console.log(unpublishedEntries);
+    const reviewCount = unpublishedEntries.get(status.get("pending_review")).size;
+    const readyCount = unpublishedEntries.get(status.get('pending_publish')).size;
 
     return (
       <WorkflowContainer>
@@ -138,10 +139,13 @@ function mapStateToProps(state) {
 
   if (isEditorialWorkflow) {
     returnObj.isFetching = state.editorialWorkflow.getIn(['pages', 'isFetching'], false);
+    console.log("workflow arr:");
+    console.log(state.config.get(EDITORIAL_WORKFLOW).get('states').toArray().map((elem)=>elem.toArray()));
+
 
     /*
      * Generates an ordered Map of the available status as keys.
-     * Each key containing a Sequence of available unpubhlished entries
+     * Each key containing a Sequence of available unpublished entries
      * Eg.: OrderedMap{'draft':Seq(), 'pending_review':Seq(), 'pending_publish':Seq()}
      */
     returnObj.unpublishedEntries = status.reduce((acc, currStatus) => {

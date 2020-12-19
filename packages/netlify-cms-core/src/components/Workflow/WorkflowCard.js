@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { translate } from 'react-polyglot';
 import { Link } from 'react-router-dom';
 import { components, colors, colorsRaw, transitions, buttons } from 'netlify-cms-ui-default';
+import {Dropdown, DropdownItem, StyledDropdownButton } from 'netlify-cms-ui-default';
 
 const styles = {
   text: css`
@@ -102,6 +103,7 @@ const WorkflowCard = ({
   collectionName,
   title,
   authorLastChange,
+  listOfContributors,
   body,
   isModification,
   editLink,
@@ -111,6 +113,23 @@ const WorkflowCard = ({
   onPublish,
   t,
 }) => (
+  <div><Dropdown
+    dropdownWidth="160px"
+    dropdownPosition="left"
+    dropdownTopOverlap="40px"
+    renderButton={() => (
+      <StyledDropdownButton>Assign Contributor</StyledDropdownButton>
+    )}
+  >
+    {
+      listOfContributors.map(collection => (
+      <DropdownItem
+        key={'abc'+collection}
+        label={collection}
+        onClick={() => alert(collection)}
+      />
+    ))}
+  </Dropdown>
   <WorkflowCardContainer>
     <WorkflowLink to={editLink}>
       <CardCollection>{collectionName}</CardCollection>
@@ -135,7 +154,7 @@ const WorkflowCard = ({
           : t('workflow.workflowCard.publishNewEntry')}
       </PublishButton>
     </CardButtonContainer>
-  </WorkflowCardContainer>
+  </WorkflowCardContainer></div>
 );
 
 WorkflowCard.propTypes = {

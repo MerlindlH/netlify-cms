@@ -71,7 +71,7 @@ class Editor extends React.Component {
     loadEntries: PropTypes.func.isRequired,
     deployPreview: ImmutablePropTypes.map,
     loadDeployPreview: PropTypes.func.isRequired,
-    currentStatus: PropTypes.string,
+    currentStatus: ImmutablePropTypes.map,
     user: ImmutablePropTypes.map.isRequired,
     location: PropTypes.shape({
       pathname: PropTypes.string,
@@ -219,7 +219,7 @@ class Editor extends React.Component {
     if (entry) this.props.createDraftFromEntry(entry, metadata);
   };
 
-  handleChangeStatus = newStatusName => {
+  handleChangeStatus = newStatus => {
     const {
       entryDraft,
       updateUnpublishedEntryStatus,
@@ -232,7 +232,6 @@ class Editor extends React.Component {
       window.alert(t('editor.editor.onUpdatingWithUnsavedChanges'));
       return;
     }
-    const newStatus = status.get(newStatusName);
     updateUnpublishedEntryStatus(collection.get('name'), slug, currentStatus, newStatus);
   };
 

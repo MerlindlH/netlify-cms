@@ -4,6 +4,15 @@ backend:
 site_url: https://example.com
 
 publish_mode: editorial_workflow
+editorial_workflow:
+  states:
+    - { label: "Draft",  name: "draft", color: 'purple' }
+    - { label: "In Review",  name: "review", color: 'blue' }
+    - { label: "Copy Edit",  name: "copyedit", color: 'teal' }
+    - { label: "Blocked",  name: "blocked", color: 'red' }
+    - { label: "Ready",  name: "ready", color: 'green' }
+
+
 media_folder: assets/uploads
 
 collections: # A list of collections the CMS should be able to edit

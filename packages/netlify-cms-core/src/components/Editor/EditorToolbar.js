@@ -221,7 +221,7 @@ class EditorToolbar extends React.Component {
     hasUnpublishedChanges: PropTypes.bool,
     isNewEntry: PropTypes.bool,
     isModification: PropTypes.bool,
-    currentStatus: PropTypes.string,
+    currentStatus: ImmutablePropTypes.map,
     onLogoutClick: PropTypes.func.isRequired,
     deployPreview: ImmutablePropTypes.map,
     loadDeployPreview: PropTypes.func.isRequired,
@@ -396,21 +396,9 @@ class EditorToolbar extends React.Component {
               </StatusButton>
             )}
           >
-            <StatusDropdownItem
-              label={t('editor.editorToolbar.draft')}
-              onClick={() => onChangeStatus('DRAFT')}
-              icon={currentStatus === status.get('DRAFT') && 'check'}
-            />
-            <StatusDropdownItem
-              label={t('editor.editorToolbar.inReview')}
-              onClick={() => onChangeStatus('PENDING_REVIEW')}
-              icon={currentStatus === status.get('PENDING_REVIEW') && 'check'}
-            />
-            <StatusDropdownItem
-              label={t('editor.editorToolbar.ready')}
-              onClick={() => onChangeStatus('PENDING_PUBLISH')}
-              icon={currentStatus === status.get('PENDING_PUBLISH') && 'check'}
-            />
+            {status.toArray().map((elem) => (
+                <StatusDropdownItem label={elem.get('label')} onClick={() => onChangeStatus(elem)} icon={currentStatus === elem && 'check'}/>
+              ))}
           </ToolbarDropdown>
           <ToolbarDropdown
             dropdownTopOverlap="40px"

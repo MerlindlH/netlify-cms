@@ -294,7 +294,7 @@ EditorInterface.propTypes = {
   hasUnpublishedChanges: PropTypes.bool,
   isNewEntry: PropTypes.bool,
   isModification: PropTypes.bool,
-  currentStatus: PropTypes.string,
+  currentStatus: ImmutablePropTypes.map,
   onLogoutClick: PropTypes.func.isRequired,
   deployPreview: ImmutablePropTypes.map,
   loadDeployPreview: PropTypes.func.isRequired,
